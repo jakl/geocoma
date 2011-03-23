@@ -1,0 +1,1 @@
+<br /><footer><small><center>Written by James Koval : Copyright 2011 and Licensed under the GNU GPL v3+</center></small></footer>

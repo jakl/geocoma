@@ -1,0 +1,1 @@
+Geocoma takes comma separated value files, and plots them with geo-coordinates into kml google earth files. This is still early alpha with missing front end formatting and database population. It could even make your box go *crunch* *bang* ... well maybe only if you run #!CrunchBangLinux.
