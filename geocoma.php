@@ -20,13 +20,6 @@
  email:  james.ross.koval () gmail dot com
  */
 
-class point{
-  public function __construct($lat, $lon){
-    $this->lat = $lat;
-    $this->lon = $lon;
-  }
-}
-
 class geocoma{
 
   private static $kmlStart = "<?xml version='1.0' encoding='UTF-8'?>
@@ -44,33 +37,15 @@ class geocoma{
    
   private static $kmlEnd = '</Document></kml>';
   
-  public static $sqliteDBname = 'addr_to_geocoord.sqlite';
-
-  //hash of addresses to geo coordinates
-  private static $addr_to_geocoord = array();
+  private $liteDB;
 
   public function __construct(){
-    //Populate $addr_to_geocoord, lookup table for values of lat,lon knowing the key: city,state
+    include('point.php');
+    include('liteDB.php');
     
-    if(isset(geocoma::$addr_to_geocoord)){
-      return;
-    }
-    
-    /*TODO: Consider a database object to manage everything
-    
-    try { $dbhandle = new SQLiteDatabase(geocoma::$sqliteDBname); }
-    catch (Exception $e) {return;}
-
-    //$query = $dbhandle->query('SELECT name, email FROM users LIMIT 250'); // buffered result set
-    
-    //unbuffered reads the database sequentially as needed, rather than dumping it immediately to memory
-    $query = $dbhandle->unbufferedQuery('SELECT city,state,lat,lon FROM geo LIMIT 250'); // unbuffered result set
-
-    $result = $query->fetchAll(SQLITE_ASSOC);
-    foreach ($result as $entry) {
-      geocoma::$addr_to_geocoord[$entry['city'].$enty['state']] = new point($entry['lat'], $enty['lon']);
-    }
-    */
+    //Populate $geoCache, lookup table for values of lat,lon knowing the key: city,state
+    $this->liteDB = new liteDB();
+    $this->liteDB->init();
   }
 
   public function parse($filePath){
@@ -110,8 +85,8 @@ class geocoma{
   private function getPoint($city, $state){
     
     //Use the hashmap to translate city, state into lat, lon
-    if(array_key_exists($city.$state, geocoma::$addr_to_geocoord)){
-      return geocoma::$addr_to_geocoord[$city.$state];
+    if($this->liteDB->contains($city,$state)){
+      return $this->liteDB->get($city,$state);
     }
     
     //Use google to translate city, state into longitude latitude
@@ -132,7 +107,7 @@ class geocoma{
 
       $point = new point($coordinatesSplit[0], $coordinatesSplit[1]);
       
-      $this->savePoint($city, $state, $point);
+      $this->liteDB->set($city, $state, $point);
       
       return $point;
 
@@ -143,7 +118,7 @@ class geocoma{
   }
   
   private function savePoint($city, $state, $point){
-    geocoma::$addr_to_geocoord[$city.$state] = $point;
+    $this->geoCache[$city.$state] = $point;
     
     //TODO: Save data to sqlite database
   }
