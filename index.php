@@ -16,7 +16,7 @@ if(isset($_POST['Parse']) and isset($_POST['file'])){
     print $kmlFile;
     exit;
   }
-  catch (Exception $e) { print $e.getMessage(); }
+  catch (Exception $e) { print $e->getMessage(); }
 }
 ?>
 
