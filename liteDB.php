@@ -30,7 +30,6 @@ class liteDB{
     if(!isset($this->geoCache)){
       $this->init();
     }
-    print_r(array_key_exists($city.$state, $this->geoCache));
     return array_key_exists($city.$state, $this->geoCache);
   }
 
