@@ -1,1 +1,3 @@
-Geocoma takes comma separated value files, and plots them with geo-coordinates into kml google earth files. This is still early alpha with missing front end formatting and database population. It could even make your box go *crunch* *bang* ... well maybe only if you run #!CrunchBangLinux.
+Geocoma takes comma separated value files, and plots them with geo-coordinates into kml google earth files. This is still early beta with missing front end formatting and potentially some obscure error handling.
+
+It requires the debian package: "php5-sqlite" which depends on libsqlite0 (>= 2.8.17), libsqlite3-0 (>= 3.7.2)
